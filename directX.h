@@ -13,6 +13,7 @@ int startX();
 void endX(int fbfd);
 void ppixel(int x, int y,char r,char g,char b);
 void hline(int x, int y,int x2,char r,char g,char b);
+void boxs(int x,int y,int x2,int y2,char r,char g,char b);
 
 
     struct fb_var_screeninfo vinfo;
@@ -79,6 +80,11 @@ ppixel(x,f,r,g,b);
 
 } 
 
+
+void boxs(int x,int y,int x2,int y2,char r,char g,char b){
+int i=0;
+for (i=y;i<y2;i++)hline(x,i,x2,r,g,b);
+}
 
 
 
