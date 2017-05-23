@@ -5257,7 +5257,17 @@ if (x>0 && y>0 && x<vinfo.xres && y<vinfo.yres){
 
 
 void hline(int x, int y,int x2,char r,char g,char b){
-for (int xx=x;xx<x2+1;xx++)ppixel(xx,y,r,g,b);
+int f;
+int xx1=x;
+int xx2=x2;
+int xx3=x;
+if(xx2<xx1){
+xx1=xx2;
+xx2=xx3;
+}
+for(f=xx1;f<xx2;f++){
+ppixel(f,y,r,g,b);
+}
 }
 
 
