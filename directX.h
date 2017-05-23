@@ -77,6 +77,9 @@ void lineL(int x,int y,int x2,int y2,char r,char g,char b);
 void rectangle(int x,int y,int x2,int y2,char r,char g,char b);
 void line(int x,int y,int x2,int y2,char r,char g,char b);
 void grid (control c,int steep,char r,char g,char b);
+int gpixel(int x,int y);
+void copyImage(int x,int y,int w,int h, int *img);
+void putImage(int x,int y,int w,int h, int *img);
 
 
     struct fb_var_screeninfo vinfo;
@@ -5498,13 +5501,104 @@ line(x2,y,x2,y2,r,g,b);
 
 void grid (control c,int steep,char r,char g,char b){
 int i;
+boxs(c.x,c.y,c.x+c.w,c.y+c.h,255,255,255);
 rectangle(c.x,c.y,c.x+c.w,c.y+c.h,r,g,b);
 for(i=c.x;i<c.x+c.w;i=i+steep)line(i,c.y,i,c.y+c.h,r,g,b);
 for(i=c.y;i<c.y+c.h;i=i+steep)line(c.x,i,c.x+c.w,i,r,g,b);
 }
 
+int gpixel(int x,int y){
+int color=0;
+int r;
+int g;
+int b;
+int a;
+unsigned short int t;
+unsigned short int tt=15;
+if (x>0 && y>0 && x<vinfo.xres && y<vinfo.yres){
+           int location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                       (y+vinfo.yoffset) * finfo.line_length;
+
+            if (vinfo.bits_per_pixel == 32) {
+                b=*(fbp + location);        
+                g=*(fbp + location + 1);  
+                r=*(fbp + location + 2); 
+                a=*(fbp + location + 3);      
+                color=r<<16 | g << 8 | b;
+            } else  { 
 
 
+                color=*((unsigned short int*)(fbp + location));
+
+
+
+}
+
+}
+
+return color;
+} 
+
+
+
+void putImage(int x,int y,int w,int h, int *img){
+char r;
+char g;
+char b;
+unsigned short int tt=15;
+int ix=0;
+int iy=0;
+for (iy=0;iy<h+1;iy++){
+for (ix=0;ix<w+1;ix++){
+b=(char) (img[iy*w+ix] && tt/16)>>11;
+tt=tt<<8;
+g=(char)(img[iy*w+ix] && tt/16)>>5;
+tt=tt<<8;
+r=(char)(img[iy*w+ix] && tt/16);
+ppixel(x+ix,y+iy,r,g,b);
+}
+}
+}
+
+
+
+
+void copyImage(int x,int y,int w,int h, int *img){
+int r;
+int g;
+int b;
+int ix=0;
+int iy=0;
+for (iy=0;iy<h+1;iy++){
+for (ix=0;ix<w+1;ix++){
+img[iy*w+ix]=gpixel(x+ix,y+iy);
+}
+}
+}
+
+
+void circle(int xx,int yy ,int rr,char rcc,char gcc, char bcc){
+long double rrr=(long double)rr,dx=(long double)xx,dy=(long double)yy,ddddd=0.0,d1=0.0,dd1=0,d=0.0,dd=0.0,ddd=0.0,pi=(long double)PI;
+long double xyr=rrr*2;
+int x=1,y=1,bc=0,c=7,x1=0,y1=0;
+long double rrr1=rrr*2;
+long double rrr2=xyr/2;
+for (ddd=0.0;ddd<xyr+1.0;ddd=ddd+1.0){
+dd=dy-rrr1*(cos)(ddd/rrr2*pi);
+d=dx+rrr1*(sin)(ddd/rrr2*pi);
+ddddd=ddd+1.0;
+if (ddddd>xyr + 1.0)ddddd=0;
+dd1=dy-rrr1*(cos)(ddddd/rrr2*pi);
+d1=dx+rrr1*(sin)(ddddd/rrr2*pi);
+bc=(int)ddd;
+x=(int)d;
+y=(int)dd;
+x1=(int)d1;
+y1=(int)dd1;
+line(x,y,x1,y1,rcc,gcc,bcc);
+}
+
+}
 
 
 
