@@ -64,6 +64,8 @@ char bcolor;
 
 
 int startX();
+void iboxs(int x,int y,int x2,int y2,int *img,char r,char g,char b);
+void ihline(int x, int y,int x2,int *img,char r,char g,char b);
 void putImage(int x,int y, int *img);
 void Ipixel(int x,int y,int *img,char r,char g,char b);
 int *creatImage(int w,int h);
@@ -5528,7 +5530,8 @@ int g=0;
 int b=0;
 int a=0;
 int t=0;
-unsigned short int tt=15;
+int tt=15;
+unsigned short int aa=0;
 if (x>0 && y>0 && x<vinfo.xres && y<vinfo.yres){
            int location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
                        (y+vinfo.yoffset) * finfo.line_length;
@@ -5541,14 +5544,19 @@ if (x>0 && y>0 && x<vinfo.xres && y<vinfo.yres){
 
             } else  { 
 
-
-                a=*((unsigned short int*)(fbp + location));
+		aa=*((unsigned short int*)(fbp + location));
+                a=(int) aa;
 		t=31;
-		b=(a & t);
+		tt=a & t;
+		b=(char) tt;
 		t=t<<5;
-		g=((a & t) >> 5);
+		tt=a & t;
+		tt=tt>>5;
+		g=(char) tt;
 		t=t<<5;
-		r=((a & t) >> 11);
+		tt=a & t;
+		tt=tt>>11;
+		r=(char) tt;
 
 
 
@@ -5558,7 +5566,7 @@ if (x>0 && y>0 && x<vinfo.xres && y<vinfo.yres){
 
 }
                 color=r<<16 | g << 8 | b;
-return color;
+return (int) color;
 } 
 
 
@@ -5654,13 +5662,32 @@ return 0;
 
 
 
+void ihline(int x, int y,int x2,int *img,char r,char g,char b){
+int f;
+int xx1=x;
+int xx2=x2;
+int xx3=x;
+if(xx2<xx1){
+xx1=xx2;
+xx2=xx3;
+}
+for(f=xx1;f<xx2;f++){
+Ipixel(f,y,img,r,g,b);
+}
+}
+
+
+void iboxs(int x,int y,int x2,int y2,int *img,char r,char g,char b){
+int i=0;
+for (i=y;i<y2;i++)ihline(x,i,x2,img,r,g,b);
+}
 
 
 
 
 
 
-
+	
 
 
 
