@@ -26,8 +26,10 @@ void boxs(int x,int y,int x2,int y2,char r,char g,char b);
 void gputc(int x,int y,char r,char g,char b,char c);
 void gputs(int x,int y,char r,char g,char b,char *c);
 void ball(int xx,int yy ,int rr,char r,char g,char b);
-
-
+void lineR(int x,int y,int x2,int y2,char r,char g,char b);
+void lineL(int x,int y,int x2,int y2,char r,char g,char b);
+void rectangle(int x,int y,int x2,int y2,char r,char g,char b);
+void line(int x,int y,int x2,int y2,char r,char g,char b);
 
 
 
@@ -5298,6 +5300,154 @@ hline(x1,y,x,rc,gc,bcc);
 }
 
 
+void lineR(int x,int y,int x2,int y2,char r,char g,char bc){
+long l1=0,l2=0,l3=0,l4=0,l5=0;
+int i4=0;
+int xx=x;
+int yy=y;
+int xxx=x2;
+int yyy=y2;
+int c=0;
+int c2=0;
+if (xx>xxx){
+i4=xxx;
+xxx=xx;
+xx=i4;
+}
+if (yy>yyy){
+i4=yyy;
+yyy=yy;
+yy=i4;
+}
+
+int i1=xxx-xx;
+int i2=yyy-yy;
+int i3;
+int i5;
+int i6;
+int i8;
+int b=0;
+int ty=0;
+if (i1>i2){
+l1=(long)i1;
+l2=(long)i2;
+if(l1==0){
+l1=1;};
+l4=(l2*10000/l1);
+l3=0;
+i6=0;
+c=0;
+c2=0;
+for(i5=0;i5<i1+1;i5++){
+l5=l3/10000;
+i3=(int)l5;
+ppixel(xx+i5,y+(i3),r,g,bc);
+l3=l3+l4;
+}
+}else{
+l1=(long)i1;
+l2=(long)i2;
+if(l2==0){
+l2=1;};
+l4=(l1*10000/l2);
+l3=0;
+i6=0;
+c=0;
+c2=0;
+for(i5=0;i5<i2+1;i5++){
+l5=l3/10000;
+i3=(int)l5;
+ppixel(xx+i3,y+(i5),r,g,bc);
+l3=l3+l4;
+}
+} 
+}
+
+void lineL(int x,int y,int x2,int y2,char r,char g,char bc){
+long l1=0,l2=0,l3=0,l4=0,l5=0;
+int i4=0;
+int xx=x;
+int yy=y;
+int xxx=x2;
+int yyy=y2;
+int c=0;
+int c2=0;
+if (xx>xxx){
+i4=xxx;
+xxx=xx;
+xx=i4;
+}
+if (yy<yyy){
+i4=yyy;
+yyy=yy;
+yy=i4;
+}
+
+int i1=xxx-xx;
+int i2=yy-yyy;
+int i3;
+int i5;
+int i6;
+int i8;
+int b=0;
+int ty=0;
+if (i1>i2){
+l1=(long)i1;
+l2=(long)i2;
+if(l1==0){
+l1=1;};
+l4=(l2*10000/l1);
+l3=0;
+i6=0;
+c=0;
+c2=0;
+for(i5=0;i5<i1+1;i5++){
+l5=l3/10000;
+i3=(int)l5;
+ppixel(xx+i5,y-(i3),r,g,bc);
+l3=l3+l4;
+}
+}else{
+l1=(long)i1;
+l2=(long)i2;
+if(l2==0){
+l2=1;};
+l4=(l1*10000/l2);
+l3=0;
+i6=0;
+c=0;
+c2=0;
+for(i5=0;i5<i2+1;i5++){
+l5=l3/10000;
+i3=(int)l5;
+ppixel(xx+i3,yy-i5,r,g,bc);
+l3=l3+l4;
+}
+} 
+}
+
+void line(int x,int y,int x2,int y2,char r,char g,char b){
+int i=-1;
+if(x>x2 && y<y2)i=5;
+if(x>x2 && y>y2)i=4;
+if(x<x2 && y<y2)i=3;
+if(x<x2 && y>y2)i=2;
+if(y==y2)i=0;
+if(x==x2)i=1;
+if (i==0)hline(x,y,x2,r,g,b);
+if (i==1)vline(x,y,y2,r,g,b);
+if (i==2)lineL(x,y,x2,y2,r,g,b);
+if (i==3)lineR(x,y,x2,y2,r,g,b);
+if (i==4)lineR(x2,y2,x,y,r,g,b);
+if (i==5)lineL(x2,y2,x,y,r,g,b);
+}
+
+void rectangle(int x,int y,int x2,int y2,char r,char g,char b){
+line(x,y,x2,y,r,g,b);
+line(x,y2,x2,y2,r,g,b);
+line(x,y,x,y2,r,g,b);
+line(x2,y,x2,y2,r,g,b);
+}
 
 
 
