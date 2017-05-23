@@ -64,6 +64,10 @@ char bcolor;
 
 
 int startX();
+void putImage(int x,int y, int *img);
+void Ipixel(int x,int y,int *img,char r,char g,char b);
+int *creatImage(int w,int h);
+void circle(int xx,int yy ,int rr,char rcc,char gcc, char bcc);
 void endX(int fbfd);
 void grid (control c,int steep,char r,char g,char b);
 void ppixel(int x, int y,char r,char g,char b);
@@ -78,8 +82,8 @@ void rectangle(int x,int y,int x2,int y2,char r,char g,char b);
 void line(int x,int y,int x2,int y2,char r,char g,char b);
 void grid (control c,int steep,char r,char g,char b);
 int gpixel(int x,int y);
-void copyImage(int x,int y,int w,int h, int *img);
-void putImage(int x,int y,int w,int h, int *img);
+void copyImage(int x,int y, int *img);
+int Igpixel(int x,int y,int *img,char *r,char *g,char *b);
 
 
     struct fb_var_screeninfo vinfo;
@@ -5519,11 +5523,11 @@ for(i=c.y;i<c.y+c.h;i=i+steep)line(c.x,i,c.x+c.w,i,r,g,b);
 
 int gpixel(int x,int y){
 int color=0;
-int r;
-int g;
-int b;
-int a;
-unsigned short int t;
+int r=0;
+int g=0;
+int b=0;
+int a=0;
+int t=0;
 unsigned short int tt=15;
 if (x>0 && y>0 && x<vinfo.xres && y<vinfo.yres){
            int location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
@@ -5534,37 +5538,47 @@ if (x>0 && y>0 && x<vinfo.xres && y<vinfo.yres){
                 g=*(fbp + location + 1);  
                 r=*(fbp + location + 2); 
                 a=*(fbp + location + 3);      
-                color=r<<16 | g << 8 | b;
+
             } else  { 
 
 
-                color=*((unsigned short int*)(fbp + location));
+                a=*((unsigned short int*)(fbp + location));
+		t=31;
+		b=(a & t);
+		t=t<<5;
+		g=((a & t) >> 5);
+		t=t<<5;
+		r=((a & t) >> 11);
+
+
 
 
 
 }
 
 }
-
+                color=r<<16 | g << 8 | b;
 return color;
 } 
 
 
 
-void putImage(int x,int y,int w,int h, int *img){
+void putImage(int x,int y, int *img){
 char r;
 char g;
 char b;
-unsigned short int tt=15;
+int t=0;
 int ix=0;
 int iy=0;
-for (iy=0;iy<h+1;iy++){
-for (ix=0;ix<w+1;ix++){
-b=(char) (img[iy*w+ix] && tt/16)>>11;
-tt=tt<<8;
-g=(char)(img[iy*w+ix] && tt/16)>>5;
-tt=tt<<8;
-r=(char)(img[iy*w+ix] && tt/16);
+int ttt;
+for (iy=0;iy<img[1]+1;iy++){
+for (ix=0;ix<img[0]+1;ix++){
+ttt=255;
+b=(char) ttt & img[iy*img[0]+ix+3];
+ttt=ttt<<8;
+g=(char)((img[iy*img[0]+ix+3] & ttt)>>8);
+ttt=ttt<<8;
+r=(char)((img[iy*img[0]+ix+3] & ttt)>>16);
 ppixel(x+ix,y+iy,r,g,b);
 }
 }
@@ -5573,15 +5587,15 @@ ppixel(x+ix,y+iy,r,g,b);
 
 
 
-void copyImage(int x,int y,int w,int h, int *img){
+void copyImage(int x,int y, int *img){
 int r;
 int g;
 int b;
 int ix=0;
 int iy=0;
-for (iy=0;iy<h+1;iy++){
-for (ix=0;ix<w+1;ix++){
-img[iy*w+ix]=gpixel(x+ix,y+iy);
+for (iy=0;iy<img[1]+1;iy++){
+for (ix=0;ix<img[0]+1;ix++){
+img[iy*img[0]+ix+3]=gpixel(x+ix,y+iy);
 }
 }
 }
@@ -5609,6 +5623,53 @@ line(x,y,x1,y1,rcc,gcc,bcc);
 }
 
 }
+
+int *creatImage(int w,int h){
+int *bytes=(int *) malloc((w)*(h)*sizeof(int)+sizeof(int)*4);
+bytes[0]=w;
+bytes[1]=h;
+bytes[2]=vinfo.bits_per_pixel;
+return (int *) bytes;
+}
+
+
+void Ipixel(int x,int y,int *img,char r,char g,char b){
+if(x>=0 && x<=img[0] && y>=0 && y<=img[1]) img[x+(y*img[0])+3]=r<<16 | g << 8 | b;
+}
+
+int Igpixel(int x,int y,int *img,char *r,char *g,char *b){
+unsigned short int tt=15;
+if(x>=0 && x<=img[0] && y>=0 && y<=img[1]) {
+b=(char *)(img[img[0]*y+x+3] & tt/16);
+tt=tt<<8;
+g=(char *)((img[img[0]*y+x+3] & tt/16)>>5);
+tt=tt<<8;
+r=(char *)((img[img[0]*y+x+3] & tt/16)>>11);
+}else{
+return -1;
+}
+return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
