@@ -17,9 +17,55 @@
 #define FONTDATAMAX 2048
 #define PI 3.1415927
 
+struct control{
+int x;
+int y;
+int w;
+int h;
+};
+
+struct label{
+control c;
+char caption[100];
+char r;
+char g;
+char b;
+};
+
+struct button{
+control c;
+char caption[100];
+char r;
+char g;
+char b;
+void (*onClick)();
+};
+
+struct menus{
+control c;
+char caption[100];
+char r;
+char g;
+char b;
+void (*onClick)(int index);
+}mainMenu[32];
+
+
+struct textBar{
+control c;
+char caption[100];
+char color;
+char bcolor;
+};
+
+
+
+
+
 
 int startX();
 void endX(int fbfd);
+void grid (control c,int steep,char r,char g,char b);
 void ppixel(int x, int y,char r,char g,char b);
 void hline(int x, int y,int x2,char r,char g,char b);
 void boxs(int x,int y,int x2,int y2,char r,char g,char b);
@@ -30,7 +76,7 @@ void lineR(int x,int y,int x2,int y2,char r,char g,char b);
 void lineL(int x,int y,int x2,int y2,char r,char g,char b);
 void rectangle(int x,int y,int x2,int y2,char r,char g,char b);
 void line(int x,int y,int x2,int y2,char r,char g,char b);
-
+void grid (control c,int steep,char r,char g,char b);
 
 
     struct fb_var_screeninfo vinfo;
@@ -5447,8 +5493,15 @@ line(x,y,x2,y,r,g,b);
 line(x,y2,x2,y2,r,g,b);
 line(x,y,x,y2,r,g,b);
 line(x2,y,x2,y2,r,g,b);
-}
+}
 
+
+void grid (control c,int steep,char r,char g,char b){
+int i;
+rectangle(c.x,c.y,c.x+c.w,c.y+c.h,r,g,b);
+for(i=c.x;i<c.x+c.w;i=i+steep)line(i,c.y,i,c.y+c.h,r,g,b);
+for(i=c.y;i<c.y+c.h;i=i+steep)line(c.x,i,c.x+c.w,i,r,g,b);
+}
 
 
 
