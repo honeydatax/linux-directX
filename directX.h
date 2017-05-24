@@ -64,6 +64,15 @@ char bcolor;
 
 
 int startX();
+void centerControl (control *c,int tw,int th);
+void drawLabel(label l);
+int textW(char *caption);
+void poligan(int *p,int size,char r,char g,char b);
+void fillPolygan(int x,int y,int r,int division,char rr,char gg,char bb);
+void poly(int xx,int yy ,int rr,int divisions,int *p);
+void fffill(int x,int y,char r,char g,char b);
+void ppixel16(int x, int y,int color);
+int RGBC(char r,char g,char b);
 void ppixel16(int x, int y,int color);
 void iboxs(int x,int y,int x2,int y2,int *img,char r,char g,char b);
 void ihline(int x, int y,int x2,int *img,char r,char g,char b);
@@ -5539,7 +5548,7 @@ for(i=c.y;i<c.y+c.h;i=i+steep)line(c.x,i,c.x+c.w,i,r,g,b);
 }
 
 int gpixel(int x,int y){
-int color=0;
+int color=-1;
 int r=0;
 int g=0;
 int b=0;
@@ -5699,15 +5708,150 @@ for (i=y;i<y2;i++)ihline(x,i,x2,img,r,g,b);
 }
 
 
+int RGBC(char r,char g,char b){
+int a=0;
+           if (vinfo.bits_per_pixel == 32) {
+		a= r << 16 | g << 8 | b; 
+            } else  { 
+                unsigned short int t = r<<11 | g << 5 | b;
+		a=(int) t; 
+}
+return a;
+}
 
 
 
+void fffill(int x,int y,char rc,char gc,char bc){
+int color=RGBC(rc,gc,bc);
+int i=0;
+char b=0;
+int xx=x;
+int yy=y;
+do{
+i=gpixel(xx,yy);
+ppixel(xx,yy,rc,gc,bc);
+if (i<0 || i == color || xx < 0){
+yy++;
+xx=x;
+i=gpixel(xx,yy);
+if (xx==x && i == color)b=1;
+}else xx--;
+if (yy>vinfo.xres)b=1;
+}while(b!=1);
+
+i=0;
+b=0;
+xx=x+1;
+yy=y;
+do{
+i=gpixel(xx,yy);
+ppixel(xx,yy,rc,gc,bc);
+if (i<0 || i == color || xx > vinfo.xres){
+yy++;
+xx=x+1;
+i=gpixel(xx,yy);
+if (xx==x+1 && i == color)b=1;
+}else xx++;
+if (yy>vinfo.yres)b=1;
+}while(b!=1);
+
+i=0;
+b=0;
+xx=x;
+yy=y-1;
+do{
+i=gpixel(xx,yy);
+ppixel(xx,yy,rc,gc,bc);
+if (i<0 || i == color || xx < 0){
+yy--;
+xx=x;
+i=gpixel(xx,yy);
+if (xx==x && i == color)b=1;
+}else xx--;
+if (yy<0)b=1;
+}while(b!=1);
+
+i=0;
+b=0;
+xx=x+1;
+yy=y-1;
+do{
+i=gpixel(xx,yy);
+ppixel(xx,yy,rc,gc,bc);
+if (i<0 || i == color || xx > vinfo.xres){
+yy--;
+xx=x+1;
+i=gpixel(xx,yy);
+if (xx==x+1 && i == color)b=1;
+}else xx++;
+if (yy<0)b=1;
+}while(b!=1);
+
+
+}
+
+
+void poligan(int *p,int size,char r,char g,char b){
+int i=0,cc=1,ccc=0;
+for (i=0;i<(size-1)*2-1;i=i+2){
+ppixel(p[i],p[i+1],r,g,b);
+line(p[i],p[i+1],p[i+2],p[i+3],r,g,b);
+}
+}
 
 	
 
+void poly(int xx,int yy ,int rr,int divisions,int *p){
+long double rrr=(long double)rr,dx=(long double)xx,dy=(long double)yy,ddddd=0.0,d1=0.0,dd1=0,d=0.0,dd=0.0,ddd=0.0,pi=(long double)PI,div=(long double)divisions;
+long double xyr=rrr*2;
+int x=1,y=1,bc=0,c=7,x1=0,y1=0;
+long double rrr1=rrr*2;
+long double rrr2=div/2;
+for (ddd=0.0;ddd<div;ddd=ddd+1.0){
+dd=dy-rrr1*(cos)(ddd/rrr2*pi);
+d=dx+rrr1*(sin)(ddd/rrr2*pi);
+ddddd=ddd+1.0;
+bc=(int)ddd;
+x=(int)d;
+y=(int)dd;
+p[bc*2]=x;
+p[bc*2+1]=y;
+}
+bc=(int)ddd;
+p[bc*2]=p[0];
+p[bc*2+1]=p[1];
+}
+
+void fillPolygan(int x,int y,int r,int division,char rr,char gg,char bb){
+int pol[division*2 + 10];
+poly(x,y,r,division,&pol[0]);
+poligan(&pol[0],division+1,rr, gg, bb);
+fffill(x,y,rr, gg, bb);
+}
+
+void drawLabel(label l){
+char caption[100];
+if(l.c.h<16)l.c.h=16;
+boxs(l.c.x,l.c.y,l.c.x+l.c.w,l.c.y+l.c.h,255,255,255);
+rectangle(l.c.x,l.c.y,l.c.x+l.c.w,l.c.y+l.c.h,l.r,l.g,l.b);
+strcpy(caption,l.caption);
+int tl=l.c.w/8-1;
+if (tl<0) tl=0;
+if (l.c.w/8+1> 98)tl=98;
+caption[tl]='\0';
+gputs(l.c.x+3,l.c.y+3,l.r,l.g,l.b,caption);
+}
 
 
+int textW(char *caption){
+int r=strlen(caption) * 8;
+return r;
+}
 
+void centerControl (control *c,int tw,int th){
+c->x=(tw-c->w)/2;
+c->y=(th-c->h)/2;
+}
 
 
 
