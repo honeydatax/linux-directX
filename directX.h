@@ -64,6 +64,7 @@ char bcolor;
 
 
 int startX();
+void ppixel16(int x, int y,int color);
 void iboxs(int x,int y,int x2,int y2,int *img,char r,char g,char b);
 void ihline(int x, int y,int x2,int *img,char r,char g,char b);
 void putImage(int x,int y, int *img);
@@ -5262,6 +5263,20 @@ if (x>0 && y>0 && x<vinfo.xres && y<vinfo.yres){
 }
 
 
+void ppixel16(int x, int y,int color){
+if (x>0 && y>0 && x<vinfo.xres && y<vinfo.yres){
+           int location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                       (y+vinfo.yoffset) * finfo.line_length;
+
+
+                *((unsigned short int*)(fbp + location)) = color;
+
+}
+}
+
+
+
+
 void hline(int x, int y,int x2,char r,char g,char b){
 int f;
 int xx1=x;
@@ -5542,22 +5557,11 @@ if (x>0 && y>0 && x<vinfo.xres && y<vinfo.yres){
                 r=*(fbp + location + 2); 
                 a=*(fbp + location + 3);      
 
+                color=r<<16 | g << 8 | b;
             } else  { 
 
 		aa=*((unsigned short int*)(fbp + location));
-                a=(int) aa;
-		t=31;
-		tt=a & t;
-		b=(char) tt;
-		t=t<<5;
-		tt=a & t;
-		tt=tt>>5;
-		g=(char) tt;
-		t=t<<5;
-		tt=a & t;
-		tt=tt>>11;
-		r=(char) tt;
-
+		color=(int) aa;
 
 
 
@@ -5565,7 +5569,7 @@ if (x>0 && y>0 && x<vinfo.xres && y<vinfo.yres){
 }
 
 }
-                color=r<<16 | g << 8 | b;
+
 return (int) color;
 } 
 
@@ -5579,6 +5583,7 @@ int t=0;
 int ix=0;
 int iy=0;
 int ttt;
+if (img[2]==32){
 for (iy=0;iy<img[1]+1;iy++){
 for (ix=0;ix<img[0]+1;ix++){
 ttt=255;
@@ -5590,6 +5595,16 @@ r=(char)((img[iy*img[0]+ix+3] & ttt)>>16);
 ppixel(x+ix,y+iy,r,g,b);
 }
 }
+}else{
+for (iy=0;iy<img[1]+1;iy++){
+for (ix=0;ix<img[0]+1;ix++){
+ppixel16(x+ix,y+iy,img[iy*img[0]+ix+3]);
+}
+}
+}
+
+
+
 }
 
 
@@ -5601,6 +5616,7 @@ int g;
 int b;
 int ix=0;
 int iy=0;
+img[2]=vinfo.bits_per_pixel;
 for (iy=0;iy<img[1]+1;iy++){
 for (ix=0;ix<img[0]+1;ix++){
 img[iy*img[0]+ix+3]=gpixel(x+ix,y+iy);
@@ -5636,7 +5652,7 @@ int *creatImage(int w,int h){
 int *bytes=(int *) malloc((w)*(h)*sizeof(int)+sizeof(int)*4);
 bytes[0]=w;
 bytes[1]=h;
-bytes[2]=vinfo.bits_per_pixel;
+bytes[2]=32;
 return (int *) bytes;
 }
 
