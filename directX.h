@@ -64,6 +64,7 @@ char bcolor;
 
 
 int startX();
+void outSide(int y);
 void centerControl (control *c,int tw,int th);
 void drawLabel(label l);
 int textW(char *caption);
@@ -103,6 +104,8 @@ int Igpixel(int x,int y,int *img,char *r,char *g,char *b);
     long int screensize = 0;
     char *fbp = 0;
     long int location = 0;
+
+struct termios oldt;
 
 
 unsigned char font8x8[FONTDATAMAX] = {
@@ -5238,6 +5241,16 @@ unsigned char font8x8[FONTDATAMAX] = {
 
 int startX(){
 int fbfd = open("/dev/fb0", O_RDWR);
+struct termios newt;
+tcgetattr(fileno(stdin),&oldt);
+memcpy(&newt,&oldt,sizeof(struct termios));
+newt.c_lflag &= ~(ECHO|ICANON);
+newt.c_cc[VTIME]=0;
+newt.c_cc[VMIN]=0;
+tcsetattr(fileno(stdin),TCSANOW,&newt);
+
+
+
 ioctl(fbfd, FBIOGET_FSCREENINFO, &finfo);
 ioctl(fbfd, FBIOGET_VSCREENINFO, &vinfo);
 screensize = vinfo.xres * vinfo.yres * vinfo.bits_per_pixel / 8;
@@ -5245,6 +5258,9 @@ fbp = (char *)mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED, fbfd, 0);
 }
 
 void endX(int fbfd){
+oldt.c_lflag|=ECHO|ICANON;
+tcsetattr(fileno(stdin),TCSANOW,&oldt);
+
     close(fbfd);
 }
 
@@ -5853,6 +5869,10 @@ c->x=(tw-c->w)/2;
 c->y=(th-c->h)/2;
 }
 
+void outSide(int y){
+boxs(0,0,vinfo.xres,y,0,255,255);
+boxs(0,y,vinfo.xres,vinfo.yres,200,0,0);
+}
 
 
 
