@@ -13,7 +13,6 @@ int xxx=rr*2;
 int yyy=rr*2;
 label l;
 strcpy(l.caption,"im love marina.  ");
-int *img;
 int *img2;
 int bb=5;
 int dd=-bb;
@@ -25,9 +24,7 @@ int x=vinfo.xres/2;
     if (fbfd == -1) exit(1);
     if ((int)fbp == -1)exit(1);
 
-img=creatImage(vinfo.xres,vinfo.yres);
 img2=creatImage(vinfo.xres,vinfo.yres);
-copyImage(0,0,img);
 
 do{
 iboxs(0,0,vinfo.xres,vinfo.yres,img2,255,255,255);
@@ -43,7 +40,7 @@ if (yyy>vinfo.yres-rr*2)cc=dd;
 if (yyy<rr*2)cc=bb;
 }while(a!=27); 
 
-putImage(0,0,img);
+
 endX(fbfd);
     return 0;
 }

@@ -10,7 +10,6 @@ int a;
 int y=40;
 label l;
 strcpy(l.caption,"im love marina.  ");
-int *img;
 int *img2;
 int bb=1;
 int aa=bb;
@@ -21,9 +20,8 @@ int x=vinfo.xres/2;
     if (fbfd == -1) exit(1);
     if ((int)fbp == -1)exit(1);
 
-img=creatImage(vinfo.xres,vinfo.yres);
 img2=creatImage(vinfo.xres,vinfo.yres);
-copyImage(0,0,img);
+
 
 do{
 iboxs(0,0,vinfo.xres,y,img2,0,255,255);
@@ -39,7 +37,7 @@ if (x>vinfo.xres/2+vinfo.xres/3)aa=-bb;
 if (x<vinfo.xres/2-vinfo.xres/3)aa=bb;
 }while(a!=27); 
 
-putImage(0,0,img);
+
 endX(fbfd);
     return 0;
 }
