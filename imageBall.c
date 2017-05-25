@@ -4,7 +4,7 @@
 
 
 
-int main()
+int main(int argc, char ** argv)
 {
 int a;
 int y=40;
@@ -19,7 +19,7 @@ int bb=5;
 int dd=-bb;
 int aa=bb;
 int cc=bb;
-    int fbfd = startX();
+    int fbfd = startX(argv[0]);
 char c[]="im love marina.";
 int x=vinfo.xres/2;   
     if (fbfd == -1) exit(1);

@@ -5244,8 +5244,14 @@ unsigned char font8x8[FONTDATAMAX] = {
 
 
 
-int startX(){
-int fbfd = open("/dev/fb0", O_RDWR);
+int startX(char *c){
+if(isatty(1)==0){
+char t[100];
+strcpy(t,"exo-open --launch TerminalEmulator ");
+strcat(t,c);
+system(t);
+exit(0);
+}
 struct termios newt;
 tcgetattr(fileno(stdin),&oldt);
 memcpy(&newt,&oldt,sizeof(struct termios));
@@ -5253,7 +5259,7 @@ newt.c_lflag &= ~(ECHO|ICANON);
 newt.c_cc[VTIME]=0;
 newt.c_cc[VMIN]=0;
 tcsetattr(fileno(stdin),TCSANOW,&newt);
-
+int fbfd = open("/dev/fb0", O_RDWR);
 
 
 ioctl(fbfd, FBIOGET_FSCREENINFO, &finfo);
