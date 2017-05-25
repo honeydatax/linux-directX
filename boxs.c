@@ -4,9 +4,9 @@
 
 
 
-int main()
+int main(int argc, char ** argv)
 {
-    int fbfd = startX();
+    int fbfd = startX(argv[0]);
 
    
    
