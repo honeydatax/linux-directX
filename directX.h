@@ -5273,6 +5273,8 @@ newt.c_cc[VTIME]=0;
 newt.c_cc[VMIN]=0;
 tcsetattr(fileno(stdin),TCSANOW,&newt);
 MOUSEfile=open("/dev/input/mice",O_RDONLY|O_NONBLOCK);
+mouseX=vinfo.xres/2;
+mouseY=vinfo.yres/2;
 }
 
 void endX(int fbfd){
@@ -6078,17 +6080,26 @@ ihline(x1,y,x,img,rc,gc,bcc);
 }
 
 int mouseEvent(){
+int xx=0,yy=0;
 unsigned char data[3];
 int byte=read(MOUSEfile,data,sizeof(data));
 if (byte>0){
 left=data[0] & 1;
 right=data[0] & 2;
 middle=data[0] & 4;
-mouseX=(int) data[1];
-mouseY=(int) data[2];
-if (mouseX>127)mouseX=mouseX-256;
-if (mouseY>127)mouseY=mouseY-256;
-mouseY=-mouseY;
+xx=(int) data[1];
+yy=(int) data[2];
+if (xx>127)xx=xx-256;
+if (yy>127)yy=yy-256;
+yy=-yy;
+mouseX=mouseX+xx;
+mouseY=mouseY+yy;
+if (mouseX>8000) mouseX=0;
+if (mouseY>8000) mouseY=0;
+if (mouseX>(int)vinfo.xres) mouseX=vinfo.xres;
+if (mouseY>(int)vinfo.yres) mouseY=vinfo.yres;
+if (mouseX<0) mouseX=0;
+if (mouseY<0) mouseY=0;
 return -1;
 }
 return 0;

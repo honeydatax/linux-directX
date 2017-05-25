@@ -2,7 +2,7 @@
 
 
 void drawbut();
-
+void ddd();
 
 label XX;
 label YY;
@@ -52,7 +52,7 @@ char b=0;
     if ((int)fbp == -1)exit(1);
 
 
-drawbut();
+ddd();
 
 do{
 
@@ -73,21 +73,27 @@ int i=mouseEvent();
 if (i==-1){
 
 mouseEvent();
-sprintf(XX.caption,"%i",mouseX);
+ddd();
+}
+
+
+
+}
+
+void ddd(){
+sprintf(XX.caption,"%d",mouseX);
 drawLabel(XX);
-sprintf(YY.caption,"%i",mouseY);
+sprintf(YY.caption,"%d",mouseY);
 drawLabel(YY);
 if (left!=0)strcpy(BB.caption,"left");
 if (right!=0)strcpy(BB.caption,"right");
 if (middle!=0)strcpy(BB.caption,"middle");
 drawLabel(BB);
+
+
+
+
 }
-
-
-
-}
-
-
 
 
 

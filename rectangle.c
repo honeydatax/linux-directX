@@ -50,13 +50,6 @@ int i=mouseEvent();
 if (i==-1){
 
 mouseEvent();
-XX=XX+mouseX;
-YY=YY+mouseY;
-if (XX>vinfo.xres) XX=vinfo.xres-1;
-if (YY>vinfo.xres) YY=vinfo.xres-1;
-if (XX<0) XX=0;
-if (YY<0) YY=0;
-
 BB=left | right | middle;
 tdraw();
 
@@ -70,8 +63,8 @@ tdraw();
 void tdraw(){
 
 putImage(0,0,oldIMAGE);
-boxs(XX-10,YY-10,XX+10,YY+10,0,0,255);
-rectangle(XX-10,YY-10,XX+10,YY+10,255,255,255);
+boxs(mouseX-10,mouseY-10,mouseX+10,mouseY+10,0,0,255);
+rectangle(mouseX-10,mouseY-10,mouseX+10,mouseY+10,255,255,255);
 
 }
 
