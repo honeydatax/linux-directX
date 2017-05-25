@@ -4,14 +4,14 @@
 
 
 
-int main()
+int main(int argc, char ** argv)
 {
 int a;
 label l;
 strcpy(l.caption,"im love marina.  ");
 int y=40;
 int *img;
-    int fbfd = startX();
+    int fbfd = startX(argv[0]);
 char c[]="im love marina.";
    
     if (fbfd == -1) exit(1);

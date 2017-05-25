@@ -4,9 +4,9 @@
 
 
 
-int main()
+int main(int argc, char ** argv)
 {
-    int fbfd = startX();
+    int fbfd = startX(argv[0]);
 char c[]="im love marina.";
 int img[(vinfo.xres+2)*(vinfo.yres+2)];
 
