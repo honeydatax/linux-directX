@@ -111,7 +111,7 @@ int Igpixel(int x,int y,int *img,char *r,char *g,char *b);
     long int location = 0;
 
 struct termios oldt;
-
+char trun[]="exo-open --launch TerminalEmulator ";
 
 unsigned char font8x8[FONTDATAMAX] = {
 
@@ -5247,7 +5247,7 @@ unsigned char font8x8[FONTDATAMAX] = {
 int startX(char *c){
 if(isatty(1)==0){
 char t[100];
-strcpy(t,"exo-open --launch TerminalEmulator ");
+strcpy(t,trun);
 strcat(t,c);
 system(t);
 exit(0);
