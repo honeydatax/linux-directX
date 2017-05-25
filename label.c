@@ -73,9 +73,9 @@ int i=mouseEvent();
 if (i==-1){
 
 mouseEvent();
-sprintf(XX.caption,"%d",mouseX);
+sprintf(XX.caption,"%i",mouseX);
 drawLabel(XX);
-sprintf(YY.caption,"%d",mouseY);
+sprintf(YY.caption,"%i",mouseY);
 drawLabel(YY);
 if (left!=0)strcpy(BB.caption,"left");
 if (right!=0)strcpy(BB.caption,"right");

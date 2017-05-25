@@ -5256,6 +5256,15 @@ strcat(t,"&");
 system(t);
 exit(0);
 }
+int fbfd = open("/dev/fb0", O_RDWR);
+ioctl(fbfd, FBIOGET_FSCREENINFO, &finfo);
+ioctl(fbfd, FBIOGET_VSCREENINFO, &vinfo);
+screensize = vinfo.xres * vinfo.yres * vinfo.bits_per_pixel / 8;
+fbp = (char *)mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED, fbfd, 0);
+
+oldIMAGE=creatImage(vinfo.xres,vinfo.yres);
+copyImage(0,0,oldIMAGE);
+
 struct termios newt;
 tcgetattr(fileno(stdin),&oldt);
 memcpy(&newt,&oldt,sizeof(struct termios));
@@ -5263,16 +5272,7 @@ newt.c_lflag &= ~(ECHO|ICANON);
 newt.c_cc[VTIME]=0;
 newt.c_cc[VMIN]=0;
 tcsetattr(fileno(stdin),TCSANOW,&newt);
-int fbfd = open("/dev/fb0", O_RDWR);
-
-
-ioctl(fbfd, FBIOGET_FSCREENINFO, &finfo);
-ioctl(fbfd, FBIOGET_VSCREENINFO, &vinfo);
-screensize = vinfo.xres * vinfo.yres * vinfo.bits_per_pixel / 8;
-fbp = (char *)mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED, fbfd, 0);
 MOUSEfile=open("/dev/input/mice",O_RDONLY|O_NONBLOCK);
-oldIMAGE=creatImage(vinfo.xres,vinfo.yres);
-copyImage(0,0,oldIMAGE);
 }
 
 void endX(int fbfd){
@@ -6084,12 +6084,23 @@ if (byte>0){
 left=data[0] & 1;
 right=data[0] & 2;
 middle=data[0] & 4;
-mouseX=data[1];
-mouseY=data[2];
+mouseX=(int) data[1];
+mouseY=(int) data[2];
+if (mouseX>127)mouseX=mouseX-256;
+if (mouseY>127)mouseY=mouseY-256;
+mouseY=-mouseY;
 return -1;
 }
 return 0;
 }
+
+
+
+
+
+
+
+
 
 
 
