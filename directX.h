@@ -109,9 +109,12 @@ int Igpixel(int x,int y,int *img,char *r,char *g,char *b);
     long int screensize = 0;
     char *fbp = 0;
     long int location = 0;
-
+int left=0,middle=0,right=0,mouseX=0,mouseY=0;
+int MOUSEfile=0;
 struct termios oldt;
 char trun[]="exo-open --launch TerminalEmulator ";
+int *oldIMAGE;
+
 
 unsigned char font8x8[FONTDATAMAX] = {
 
@@ -5249,6 +5252,7 @@ if(isatty(1)==0){
 char t[100];
 strcpy(t,trun);
 strcat(t,c);
+strcat(t,"&");
 system(t);
 exit(0);
 }
@@ -5266,13 +5270,17 @@ ioctl(fbfd, FBIOGET_FSCREENINFO, &finfo);
 ioctl(fbfd, FBIOGET_VSCREENINFO, &vinfo);
 screensize = vinfo.xres * vinfo.yres * vinfo.bits_per_pixel / 8;
 fbp = (char *)mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED, fbfd, 0);
+MOUSEfile=open("/dev/input/mice",O_RDONLY|O_NONBLOCK);
+oldIMAGE=creatImage(vinfo.xres,vinfo.yres);
+copyImage(0,0,oldIMAGE);
 }
 
 void endX(int fbfd){
 oldt.c_lflag|=ECHO|ICANON;
 tcsetattr(fileno(stdin),TCSANOW,&oldt);
-
+close (MOUSEfile);
     close(fbfd);
+putImage(0,0,oldIMAGE);
 }
 
 
@@ -6069,8 +6077,19 @@ ihline(x1,y,x,img,rc,gc,bcc);
 
 }
 
-
-
+int mouseEvent(){
+unsigned char data[3];
+int byte=read(MOUSEfile,data,sizeof(data));
+if (byte>0){
+left=data[0] & 1;
+right=data[0] & 2;
+middle=data[0] & 4;
+mouseX=data[1];
+mouseY=data[2];
+return -1;
+}
+return 0;
+}
 
 
 
