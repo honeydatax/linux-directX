@@ -19,7 +19,7 @@ boxs(vinfo.xres/4-vinfo.yres/4,vinfo.yres/4-vinfo.yres/4,vinfo.xres/4+vinfo.yres
 circle(vinfo.xres/4,vinfo.yres/4,vinfo.yres/9,0,0,255);
 fffill(vinfo.xres/4,vinfo.yres/4,0,0,255);
 
-refresh(); 
+sleep(5);
 endX(fbfd);
     return 0;
 }

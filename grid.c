@@ -21,9 +21,9 @@ cc.h=vinfo.yres;
 
 
 grid(cc,5,0,0,255);
+sleep(5);
 
 
-refresh(); 
 endX(fbfd);
     return 0;
 }

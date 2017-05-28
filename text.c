@@ -18,7 +18,7 @@ for (int xy=0;xy<vinfo.yres-20;xy=xy+20)gputs(xy,xy,0,0,255,c);
 
 
 
-refresh(); 
+sleep(5);
 endX(fbfd);
     return 0;
 }

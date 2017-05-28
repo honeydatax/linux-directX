@@ -17,7 +17,7 @@ int img[(vinfo.xres+2)*(vinfo.yres+2)];
 
 for (int rr=0;rr<100;rr=rr+10)circle(vinfo.xres/2,vinfo.yres/2,rr,0,0,255);
 
-refresh(); 
+sleep(5);
 endX(fbfd);
     return 0;
 }

@@ -18,7 +18,7 @@ int img[(vinfo.xres+2)*(vinfo.yres+2)];
 boxs(vinfo.xres/4-vinfo.yres/4,vinfo.yres/4-vinfo.yres/4,vinfo.xres/4+vinfo.yres/4,vinfo.yres/4+vinfo.yres/4,255,255,255);
 fillPolygan(vinfo.xres/4,vinfo.yres/4,vinfo.yres/9,5,0,0,255);
 
-refresh(); 
+sleep(5);
 endX(fbfd);
     return 0;
 }
