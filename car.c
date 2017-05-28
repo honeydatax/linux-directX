@@ -24,8 +24,7 @@ img2=creatImage(vinfo.xres,vinfo.yres);
 
 
 do{
-iboxs(0,0,vinfo.xres,y,img2,0,255,255);
-iboxs(0,y,vinfo.xres,vinfo.yres,img2,200,0,0);
+ioutSide(y,img2);
 iline(x,y,x,vinfo.yres,img2,255,255,255);
 iline(x,y,x-vinfo.xres/3,vinfo.yres,img2,255,255,255);
 iline(x,y,x+vinfo.xres/3,vinfo.yres,img2,255,255,255);
