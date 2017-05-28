@@ -61,9 +61,11 @@ char bcolor;
 
 
 
-
-
+void ifffill(int x,int y,int *img,char rc,char gc,char bc);
+int igpixel(int x,int y,int *img);
 int startX();
+void icircle(int xx,int yy ,int rr,int *img,char rcc,char gcc, char bcc);
+void ioutSide(int y,int *img);
 void iball(int xx,int yy ,int rr,int *img,char rc,char gc,char bcc);
 void ivline(int x,int y,int y2,int *img,char r,char g,char b);
 void ilineR(int x,int y,int x2,int y2,int *img,char r,char g,char bc);
@@ -6104,6 +6106,152 @@ return -1;
 }
 return 0;
 }
+
+
+void ioutSide(int y,int *img){
+iboxs(0,0,vinfo.xres,y,img,0,255,255);
+iboxs(0,y,vinfo.xres,vinfo.yres,img,200,0,0);
+}
+
+
+void icircle(int xx,int yy ,int rr,int *img,char rcc,char gcc, char bcc){
+long double rrr=(long double)rr,dx=(long double)xx,dy=(long double)yy,ddddd=0.0,d1=0.0,dd1=0,d=0.0,dd=0.0,ddd=0.0,pi=(long double)PI;
+long double xyr=rrr*2;
+int x=1,y=1,bc=0,c=7,x1=0,y1=0;
+long double rrr1=rrr*2;
+long double rrr2=xyr/2;
+for (ddd=0.0;ddd<xyr+1.0;ddd=ddd+1.0){
+dd=dy-rrr1*(cos)(ddd/rrr2*pi);
+d=dx+rrr1*(sin)(ddd/rrr2*pi);
+ddddd=ddd+1.0;
+if (ddddd>xyr + 1.0)ddddd=0;
+dd1=dy-rrr1*(cos)(ddddd/rrr2*pi);
+d1=dx+rrr1*(sin)(ddddd/rrr2*pi);
+bc=(int)ddd;
+x=(int)d;
+y=(int)dd;
+x1=(int)d1;
+y1=(int)dd1;
+iline(x,y,x1,y1,img,rcc,gcc,bcc);
+}
+
+}
+
+
+
+
+
+int igpixel(int x,int y,int *img){
+int color=-1;
+int r=0;
+int g=0;
+int b=0;
+int a=0;
+int t=0;
+int tt=15;
+unsigned short int aa=0;
+if (x>0 && y>0 && x<img[0] && y<img[1]){
+color=img[img[0]*y+x+3];
+
+}
+
+
+
+return (int) color;
+} 
+
+
+
+
+
+
+void ifffill(int x,int y,int *img,char rc,char gc,char bc){
+int color=RGBC(rc,gc,bc);
+int i=0;
+char b=0;
+int xx=x;
+int yy=y;
+do{
+i=igpixel(xx,yy,img);
+Ipixel(xx,yy,img,rc,gc,bc);
+if (i<0 || i == color || xx < 0){
+yy++;
+xx=x;
+i=igpixel(xx,yy,img);
+if (xx==x && i == color)b=1;
+}else xx--;
+if (yy>img[1])b=1;
+}while(b!=1);
+
+i=0;
+b=0;
+xx=x+1;
+yy=y;
+do{
+i=igpixel(xx,yy,img);
+Ipixel(xx,yy,img,rc,gc,bc);
+if (i<0 || i == color || xx > img[0]){
+yy++;
+xx=x+1;
+i=igpixel(xx,yy,img);
+if (xx==x+1 && i == color)b=1;
+}else xx++;
+if (yy>img[1])b=1;
+}while(b!=1);
+
+i=0;
+b=0;
+xx=x;
+yy=y-1;
+do{
+i=igpixel(xx,yy,img);
+Ipixel(xx,yy,img,rc,gc,bc);
+if (i<0 || i == color || xx < 0){
+yy--;
+xx=x;
+i=igpixel(xx,yy,img);
+if (xx==x && i == color)b=1;
+}else xx--;
+if (yy<0)b=1;
+}while(b!=1);
+
+i=0;
+b=0;
+xx=x+1;
+yy=y-1;
+do{
+i=igpixel(xx,yy,img);
+Ipixel(xx,yy,img,rc,gc,bc);
+if (i<0 || i == color || xx > img[0]){
+yy--;
+xx=x+1;
+i=igpixel(xx,yy,img);
+if (xx==x+1 && i == color)b=1;
+}else xx++;
+if (yy<0)b=1;
+}while(b!=1);
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
