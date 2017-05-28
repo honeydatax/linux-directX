@@ -60,7 +60,9 @@ char bcolor;
 
 
 
-
+void Ipixel16(int x,int y,int *img,int color);
+void IputImage(int x,int y, int *img, int *img2);
+void IcopyImage(int x,int y, int *img, int *img2);
 void ifffill(int x,int y,int *img,char rc,char gc,char bc);
 int igpixel(int x,int y,int *img);
 int startX();
@@ -6237,9 +6239,57 @@ if (yy<0)b=1;
 
 
 
+void IcopyImage(int x,int y, int *img, int *img2){
+int r;
+int g;
+int b;
+int ix=0;
+int iy=0;
+img[2]=vinfo.bits_per_pixel;
+for (iy=0;iy<img[1]+1;iy++){
+for (ix=0;ix<img[0]+1;ix++){
+img[iy*img[0]+ix+3]=igpixel(ix,iy,img2);
+}
+}
+}
+
+
+void Ipixel16(int x,int y,int *img,int color){
+if(x>=0 && x<=img[0] && y>=0 && y<=img[1]) img[x+(y*img[0])+3]=color;
+}
+
+
+void IputImage(int x,int y, int *img, int *img2){
+char r;
+char g;
+char b;
+int t=0;
+int ix=0;
+int iy=0;
+int ttt;
+if (img2[2]==32){
+for (iy=0;iy<img2[1]+1;iy++){
+for (ix=0;ix<img2[0]+1;ix++){
+ttt=255;
+b=(char) ttt & img2[iy*img2[0]+ix+3];
+ttt=ttt<<8;
+g=(char)((img2[iy*img2[0]+ix+3] & ttt)>>8);
+ttt=ttt<<8;
+r=(char)((img2[iy*img2[0]+ix+3] & ttt)>>16);
+Ipixel(x+ix,y+iy,img,r,g,b);
+}
+}
+}else{
+for (iy=0;iy<img2[1]+1;iy++){
+for (ix=0;ix<img2[0]+1;ix++){
+Ipixel16(x+ix,y+iy,img,img2[iy*img2[0]+ix+3]);
+}
+}
+}
 
 
 
+}
 
 
 
