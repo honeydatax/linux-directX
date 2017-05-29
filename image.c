@@ -12,15 +12,26 @@ char c[]="im love marina.";
     if (fbfd == -1) exit(1);
     if ((int)fbp == -1)exit(1);
 
-int *img=creatImage(vinfo.xres,vinfo.yres);
-iboxs(0,0,vinfo.xres,vinfo.yres,img,255,255,255);
+//initstate(random(),0,33L);
+int *icon=creatImage(33,33);
+iboxs(0,0,icon[0],icon[1],icon,0,0,0);
+boxs(0,0,vinfo.xres,vinfo.yres,255,255,255);
+int m=0;
+int n=0;
+for (int t=0;t<11;t++){
+m=(int)random()/65000000L;
+n=(int)random()/65000000L;
+Ipixel(m,n,icon,64,64,255);
 
-for (int xy=0;xy<vinfo.yres;xy=xy+20){
-iboxs(0,xy,vinfo.xres,xy+10,img,0,0,255);
 }
 
-putImage(0,0,img);
-sleep(5);
+int a;
+do{
+m=(int)random()/1000000L;
+n=(int)random()/5000000L;
+TputImage(m,n,icon,0,0,0);
+a=fgetc(stdin); 
+}while(a!=27);
 
 endX(fbfd);
     return 0;

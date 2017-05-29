@@ -59,7 +59,7 @@ char bcolor;
 };
 
 
-
+void TputImage(int x,int y, int *img,char tr,char tg,char tb);
 void Ipixel16(int x,int y,int *img,int color);
 void IputImage(int x,int y, int *img, int *img2);
 void IcopyImage(int x,int y, int *img, int *img2);
@@ -6292,6 +6292,39 @@ Ipixel16(x+ix,y+iy,img,img2[iy*img2[0]+ix+3]);
 }
 
 
+
+void TputImage(int x,int y, int *img,char tr,char tg,char tb){
+char r;
+char g;
+char b;
+int t=0;
+int ix=0;
+int iy=0;
+int ttt;
+if (img[2]==32){
+for (iy=0;iy<img[1]+1;iy++){
+for (ix=0;ix<img[0]+1;ix++){
+ttt=255;
+b=(char) ttt & img[iy*img[0]+ix+3];
+ttt=ttt<<8;
+g=(char)((img[iy*img[0]+ix+3] & ttt)>>8);
+ttt=ttt<<8;
+r=(char)((img[iy*img[0]+ix+3] & ttt)>>16);
+if (tr!=r && tg!=g && tb!=b) ppixel(x+ix,y+iy,r,g,b);
+}
+}
+}else{
+int y=0;
+for (iy=0;iy<img[1]+1;iy++){
+for (ix=0;ix<img[0]+1;ix++){
+if (RGBC(tr,tg,tb)!=img[iy*img[0]+ix+3])ppixel16(x+ix,y+iy,img[iy*img[0]+ix+3]);
+}
+}
+}
+
+
+
+}
 
 
 
