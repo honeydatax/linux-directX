@@ -7,7 +7,7 @@ void tdraw();
 int XX=0;
 int YY=0;
 int BB=0;
-
+control c;
 
 int main(int argc, char ** argv)
 {
@@ -27,6 +27,10 @@ char b=0;
     if ((int)fbp == -1)exit(1);
 XX=vinfo.xres/2;
 YY=vinfo.yres/2;
+c.x=0;
+c.y=0;
+c.w=vinfo.xres;
+c.h=vinfo.yres;
 
 tdraw();
 
@@ -62,9 +66,10 @@ tdraw();
 
 void tdraw(){
 
-putImage(0,0,oldIMAGE);
-boxs(mouseX-10,mouseY-10,mouseX+10,mouseY+10,0,0,255);
-rectangle(mouseX-10,mouseY-10,mouseX+10,mouseY+10,255,255,255);
+boxs(c.x,c.y,c.w,c.h,255,255,255);
+boxs(mouseX-2,mouseY-2,mouseX+2,mouseY+2,0,0,255);
+rectangle(mouseX-4,mouseY-4,mouseX+4,mouseY+4,0,0,255);
+rectangle(mouseX-8,mouseY-8,mouseX+8,mouseY+8,0,0,255);
 
 }
 
