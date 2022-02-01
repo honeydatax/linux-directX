@@ -1,13 +1,9 @@
 #include "directX.h"
-
-
-
-
-
+//g++ -o image.c
 int main(int argc, char ** argv)
 {
     int fbfd = startX(argv[0]);
-char c[]="im love marina.";
+char c[]="hello world.";
    
     if (fbfd == -1) exit(1);
     if ((int)fbp == -1)exit(1);
@@ -36,13 +32,3 @@ a=fgetc(stdin);
 endX(fbfd);
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
