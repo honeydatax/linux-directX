@@ -5266,7 +5266,7 @@ ioctl(fbfd, FBIOGET_VSCREENINFO, &vinfo);
 screensize = vinfo.xres * vinfo.yres * vinfo.bits_per_pixel / 8;
 fbp = (char *)mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED, fbfd, 0);
 
-oldIMAGE=creatImage(vinfo.xres,vinfo.yres);
+oldIMAGE=creatImage(vinfo.xres+1,vinfo.yres+1);
 copyImage(0,0,oldIMAGE);
 
 struct termios newt;
@@ -5291,7 +5291,7 @@ putImage(0,0,oldIMAGE);
 
 
 void refresh(){
-   munmap(fbp, screensize);
+   munmap(fbp, screensize-1);
 }
 
 void ppixel(int x, int y,char r,char g,char b){
@@ -5347,12 +5347,36 @@ int f;
 int yy1=y;
 int yy2=y2;
 int yy3=y;
+int xx=x;
+int steeps;
+int location;
+int addss;
 if(yy2<yy1){
 yy1=yy2;
 yy2=yy3;
 }
-for(f=yy1;f<yy2;f++){
-ppixel(x,f,r,g,b);
+if(xx<0)x=0;
+if(xx>vinfo.xres-1)x=vinfo.xres-1;
+if(yy1<0)yy1=0;
+if(yy2<0)yy2=0;
+if(yy1>vinfo.yres-1)yy1=vinfo.yres-1;
+if(yy2>vinfo.yres-1)yy2=vinfo.yres-1;
+                       
+location = (xx+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +(yy1+vinfo.yoffset) * finfo.line_length;
+steeps=yy2-yy1;
+addss=(0+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +(1+vinfo.yoffset) * finfo.line_length;
+for(f=0;f<steeps;f++){
+            if (vinfo.bits_per_pixel == 32) {
+                *(fbp + location) = b;        
+                *(fbp + location + 1) = g;  
+                *(fbp + location + 2) = r; 
+                *(fbp + location + 3) = 0;      
+
+            } else  { 
+                unsigned short int t = r<<11 | g << 5 | b;
+                *((unsigned short int*)(fbp + location)) = t;
+}
+location=location+addss;
 }
 
 } 
