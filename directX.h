@@ -5408,8 +5408,59 @@ location=location+addss;
 
 
 void boxs(int x,int y,int x2,int y2,char r,char g,char b){
-int i=0;
-for (i=y;i<y2;i++)hline(x,i,x2,r,g,b);
+int f;
+int ff;
+int xx1=x;
+int xx2=x2;
+int xx3=x;
+int yy=y;
+int yy1=y;
+int yy2=y2;
+int yy3=y;
+int steeps;
+int steeps2;
+int location;
+int addss;
+int addss2;
+if(xx2<xx1){
+xx1=xx2;
+xx2=xx3;
+}
+if(yy2<yy1){
+yy1=yy2;
+yy2=yy3;
+}
+if(yy1<0)yy1=0;
+if(yy2<0)yy2=0;
+if(yy1>vinfo.yres-1)yy1=vinfo.yres-1;
+if(yy2>vinfo.yres-1)yy2=vinfo.yres-1;
+if(xx1<0)xx1=0;
+if(xx2<0)xx2=0;
+if(xx1>vinfo.xres-1)xx1=vinfo.xres-1;
+if(xx2>vinfo.xres-1)xx2=vinfo.xres-1;
+                       
+location = (xx1+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +(yy1+vinfo.yoffset) * finfo.line_length;
+steeps2=xx2-xx1;
+steeps=yy2-yy1;
+addss=(1+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +(0+vinfo.yoffset) * finfo.line_length;
+addss2=((vinfo.xres-(xx2-xx1))*addss);
+if(addss2<addss)addss2=0;
+for(f=0;f<steeps;f++){
+	for(ff=0;ff<steeps2;ff++){
+            if (vinfo.bits_per_pixel == 32) {
+                *(fbp + location) = b;        
+                *(fbp + location + 1) = g;  
+                *(fbp + location + 2) = r; 
+                *(fbp + location + 3) = 0;      
+
+            } else  { 
+                unsigned short int t = r<<11 | g << 5 | b;
+                *((unsigned short int*)(fbp + location)) = t;
+}
+location=location+addss;
+}
+location=location+addss2;
+}
 }
 
 
