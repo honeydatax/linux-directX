@@ -5332,13 +5332,38 @@ int f;
 int xx1=x;
 int xx2=x2;
 int xx3=x;
+int yy=y;
+int steeps;
+int location;
+int addss;
 if(xx2<xx1){
 xx1=xx2;
 xx2=xx3;
 }
-for(f=xx1;f<xx2;f++){
-ppixel(f,y,r,g,b);
+if(yy<0)yy=0;
+if(yy>vinfo.yres-1)yy=vinfo.yres-1;
+if(xx1<0)xx1=0;
+if(xx2<0)xx2=0;
+if(xx1>vinfo.xres-1)xx1=vinfo.xres-1;
+if(xx2>vinfo.xres-1)xx2=vinfo.xres-1;
+                       
+location = (xx1+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +(yy+vinfo.yoffset) * finfo.line_length;
+steeps=xx2-xx1;
+addss=(1+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +(0+vinfo.yoffset) * finfo.line_length;
+for(f=0;f<steeps;f++){
+            if (vinfo.bits_per_pixel == 32) {
+                *(fbp + location) = b;        
+                *(fbp + location + 1) = g;  
+                *(fbp + location + 2) = r; 
+                *(fbp + location + 3) = 0;      
+
+            } else  { 
+                unsigned short int t = r<<11 | g << 5 | b;
+                *((unsigned short int*)(fbp + location)) = t;
 }
+location=location+addss;
+}
+
 }
 
 
@@ -5355,8 +5380,8 @@ if(yy2<yy1){
 yy1=yy2;
 yy2=yy3;
 }
-if(xx<0)x=0;
-if(xx>vinfo.xres-1)x=vinfo.xres-1;
+if(xx<0)xx=0;
+if(xx>vinfo.xres-1)xx=vinfo.xres-1;
 if(yy1<0)yy1=0;
 if(yy2<0)yy2=0;
 if(yy1>vinfo.yres-1)yy1=vinfo.yres-1;
