@@ -5827,7 +5827,7 @@ void ihline(int x, int y,int x2,int *img,char r,char g,char b){
 int f;
 int xx1=x;
 int xx2=x2;
-int xx3=y;
+int xx3=x;
 int yy=y;
 int steeps;
 int location;
@@ -5853,8 +5853,48 @@ location=location+addss;
 
 
 void iboxs(int x,int y,int x2,int y2,int *img,char r,char g,char b){
-int i=0;
-for (i=y;i<y2;i++)ihline(x,i,x2,img,r,g,b);
+int f;
+int ff;
+int xx1=x;
+int xx2=x2;
+int xx3=x;
+int yy1=y;
+int yy2=x2;
+int yy3=y;
+int yy=y;
+int steeps;
+int steeps2;
+int location;
+int addss;
+int addss2;
+if(xx2<xx1){
+xx1=xx2;
+xx2=xx3;
+}
+if(yy2<yy1){
+yy1=yy2;
+yy2=yy3;
+}
+if(yy1<0)yy1=0;
+if(yy2<0)yy2=0;
+if(yy1>img[1]-1)yy1=img[1]-1;
+if(yy2>img[1]-1)yy2=img[1]-1;
+if(xx1<0)xx1=0;
+if(xx2<0)xx2=0;
+if(xx1>img[0]-1)xx1=img[0]-1;
+if(xx2>img[0]-1)xx2=img[0]-1;
+steeps=xx2-xx1;
+steeps2=yy2-yy1;
+addss=1;
+addss=img[0]-(xx2-xx1);
+location=yy*img[0]+xx1+3;
+for(f=0;f<steeps;f++){
+	for(ff=0;ff<steeps2;ff++){
+		img[x+location]=r<<16 | g << 8 | b;
+		location=location+addss;
+	}
+	location=location+addss2;
+}
 }
 
 
