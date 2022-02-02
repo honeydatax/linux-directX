@@ -5827,13 +5827,27 @@ void ihline(int x, int y,int x2,int *img,char r,char g,char b){
 int f;
 int xx1=x;
 int xx2=x2;
-int xx3=x;
+int xx3=y;
+int yy=y;
+int steeps;
+int location;
+int addss;
 if(xx2<xx1){
 xx1=xx2;
 xx2=xx3;
 }
-for(f=xx1;f<xx2;f++){
-Ipixel(f,y,img,r,g,b);
+if(yy<0)yy=0;
+if(yy>img[1]-1)yy=img[1]-1;
+if(xx1<0)xx1=0;
+if(xx2<0)xx2=0;
+if(xx1>img[0]-1)xx1=img[0]-1;
+if(xx2>img[0]-1)xx2=img[0]-1;
+steeps=xx2-xx1;
+addss=1;
+location=yy*img[0]+xx1+3;
+for(f=0;f<steeps;f++){
+img[x+location]=r<<16 | g << 8 | b;
+location=location+addss;
 }
 }
 
