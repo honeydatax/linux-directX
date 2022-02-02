@@ -5265,10 +5265,6 @@ ioctl(fbfd, FBIOGET_FSCREENINFO, &finfo);
 ioctl(fbfd, FBIOGET_VSCREENINFO, &vinfo);
 screensize = vinfo.xres * vinfo.yres * vinfo.bits_per_pixel / 8;
 fbp = (char *)mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED, fbfd, 0);
-
-oldIMAGE=creatImage(vinfo.xres+1,vinfo.yres+1);
-copyImage(0,0,oldIMAGE);
-
 struct termios newt;
 tcgetattr(fileno(stdin),&oldt);
 memcpy(&newt,&oldt,sizeof(struct termios));
@@ -5286,7 +5282,6 @@ oldt.c_lflag|=ECHO|ICANON;
 tcsetattr(fileno(stdin),TCSANOW,&oldt);
 close (MOUSEfile);
     close(fbfd);
-putImage(0,0,oldIMAGE);
 }
 
 
@@ -6004,14 +5999,27 @@ int f;
 int yy1=y;
 int yy2=y2;
 int yy3=y;
+int xx=x;
+int steeps;
+int location;
+int addss;
 if(yy2<yy1){
 yy1=yy2;
 yy2=yy3;
 }
-for(f=yy1;f<yy2;f++){
-Ipixel(x,f,img,r,g,b);
+if(xx<0)xx=0;
+if(xx>img[0]-1)xx=img[0]-1;
+if(yy1<0)yy1=0;
+if(yy2<0)yy2=0;
+if(yy1>img[1]-1)yy1=img[1]-1;
+if(yy2>img[1]-1)yy2=img[1]-1;
+steeps=yy2-yy1;
+addss=img[0];
+location=yy1*img[0];
+for(f=0;f<steeps;f++){
+img[x+location+3]=r<<16 | g << 8 | b;
+location=location+addss;
 }
-
 } 
 
 
