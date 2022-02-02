@@ -5721,40 +5721,71 @@ return (int) color;
 
 
 void putImage(int x,int y, int *img){
-char r;
-char g;
-char b;
-int t=0;
-int ix=0;
-int iy=0;
-int ttt;
-if (img[2]==32){
-for (iy=0;iy<img[1]+1;iy++){
-for (ix=0;ix<img[0]+1;ix++){
-ttt=255;
-b=(char) ttt & img[iy*img[0]+ix+3];
-ttt=ttt<<8;
-g=(char)((img[iy*img[0]+ix+3] & ttt)>>8);
-ttt=ttt<<8;
-r=(char)((img[iy*img[0]+ix+3] & ttt)>>16);
-ppixel(x+ix,y+iy,r,g,b);
+int f;
+int ff;
+int r;
+int g;
+int b;
+int rr;
+int gg;
+int bb;
+int xx1=x;
+int xx2=img[0]+x;
+int xx3=x;
+int yy1=y;
+int yy2=img[1]+y;
+int yy3=y;
+int yy=y;
+int steeps;
+int steeps2;
+int location;
+int locations;
+int addss;
+int addss2;
+int addss3;
+int addss4;
+if(xx2>vinfo.xres-1)xx2=vinfo.xres-1;
+if(yy2>vinfo.yres-1)yy2=vinfo.yres-1;
+if(xx2<xx1){
+xx1=xx2;
+xx2=xx3;
+}
+if(yy2<yy1){
+yy1=yy2;
+yy2=yy3;
+}
+if(yy1<0)yy1=0;
+if(yy2<0)yy2=0;
+if(yy1>img[1]-1)yy1=img[1]-1;
+if(yy2>img[1]-1)yy2=img[1]-1;
+if(xx1<0)xx1=0;
+if(xx2<0)xx2=0;
+if(xx1>img[0]-1)xx1=img[0]-1;
+if(xx2>img[0]-1)xx2=img[0]-1;
+steeps=xx2-xx1;
+steeps2=yy2-yy1;
+addss=1;
+addss3=((1+vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (0+vinfo.yoffset) * finfo.line_length);
+addss4=((0+vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (1+vinfo.yoffset) * finfo.line_length)-((xx2-xx1)*(vinfo.bits_per_pixel/8));
+addss2=img[0]-(xx2-xx1); 
+location=3;
+locations = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y+vinfo.yoffset) * finfo.line_length;
+if(vinfo.bits_per_pixel==32){
+for(f=0;f<steeps2;f++){
+	for(ff=0;ff<steeps;ff++){
+		b=(img[f*img[0]+ff+location] & 0xff);
+		g=(img[f*img[0]+ff+location] & 0xff00)>>8;
+		r=(img[f*img[0]+ff+location] & 0xff0000)>>16;
+        *(fbp + locations) = b;        
+		*(fbp + locations + 1) = g;  
+        *(fbp + locations + 2) = r; 
+        *(fbp + locations + 3) = 0;      
+		locations=locations+addss3;
+	}
+	locations=locations+addss4;
 }
 }
-}else{
-for (iy=0;iy<img[1]+1;iy++){
-for (ix=0;ix<img[0]+1;ix++){
-ppixel16(x+ix,y+iy,img[iy*img[0]+ix+3]);
 }
-}
-}
-
-
-
-}
-
-
-
-
 void copyImage(int x,int y, int *img){
 int r;
 int g;
@@ -5886,10 +5917,10 @@ if(xx2>img[0]-1)xx2=img[0]-1;
 steeps=xx2-xx1;
 steeps2=yy2-yy1;
 addss=1;
-addss=img[0]-(xx2-xx1);
+addss2=img[0]-(xx2-xx1);
 location=yy*img[0]+xx1+3;
-for(f=0;f<steeps;f++){
-	for(ff=0;ff<steeps2;ff++){
+for(f=0;f<steeps2;f++){
+	for(ff=0;ff<steeps;ff++){
 		img[x+location]=r<<16 | g << 8 | b;
 		location=location+addss;
 	}
