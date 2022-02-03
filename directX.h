@@ -5719,6 +5719,34 @@ return (int) color;
 } 
 
 
+void putImage2(int x,int y, int *img){
+char r;
+char g;
+char b;
+int t=0;
+int ix=0;
+int iy=0;
+int ttt;
+if (img[2]==32){
+for (iy=0;iy<img[1]+1;iy++){
+for (ix=0;ix<img[0]+1;ix++){
+ttt=255;
+b=(char) ttt & img[iy*img[0]+ix+3];
+ttt=ttt<<8;
+g=(char)((img[iy*img[0]+ix+3] & ttt)>>8);
+ttt=ttt<<8;
+r=(char)((img[iy*img[0]+ix+3] & ttt)>>16);
+ppixel(x+ix,y+iy,r,g,b);
+}
+}
+}else{
+for (iy=0;iy<img[1]+1;iy++){
+for (ix=0;ix<img[0]+1;ix++){
+ppixel16(x+ix,y+iy,img[iy*img[0]+ix+3]);
+}
+}
+}
+}
 
 void putImage(int x,int y, int *img){
 int f;
@@ -5744,8 +5772,8 @@ int addss;
 int addss2;
 int addss3;
 int addss4;
-if(xx2>vinfo.xres-1)xx2=vinfo.xres-1;
-if(yy2>vinfo.yres-1)yy2=vinfo.yres-1;
+if(xx2>vinfo.xres)xx2=vinfo.xres;
+if(yy2>vinfo.yres)yy2=vinfo.yres;
 if(xx2<xx1){
 xx1=xx2;
 xx2=xx3;
@@ -5756,18 +5784,19 @@ yy2=yy3;
 }
 if(yy1<0)yy1=0;
 if(yy2<0)yy2=0;
-if(yy1>img[1]-1)yy1=img[1]-1;
-if(yy2>img[1]-1)yy2=img[1]-1;
+if(yy1>vinfo.yres)yy1=vinfo.yres;
+if(yy2>vinfo.yres)yy2=vinfo.yres;
 if(xx1<0)xx1=0;
 if(xx2<0)xx2=0;
-if(xx1>img[0]-1)xx1=img[0]-1;
-if(xx2>img[0]-1)xx2=img[0]-1;
+if(xx1>vinfo.xres)xx1=vinfo.xres;
+if(xx2>vinfo.xres)xx2=vinfo.xres;
 steeps=xx2-xx1;
 steeps2=yy2-yy1;
 addss=1;
-addss3=((1+vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (0+vinfo.yoffset) * finfo.line_length);
-addss4=((0+vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (1+vinfo.yoffset) * finfo.line_length)-((xx2-xx1)*(vinfo.bits_per_pixel/8));
+addss3=(vinfo.bits_per_pixel/8);
+addss4=((vinfo.xres-(xx2-xx1))*addss3);
 addss2=img[0]-(xx2-xx1); 
+if(addss2<1)addss2=0;
 location=3;
 locations = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) + (y+vinfo.yoffset) * finfo.line_length;
 if(vinfo.bits_per_pixel==32){
@@ -5782,6 +5811,7 @@ for(f=0;f<steeps2;f++){
         *(fbp + locations + 3) = 0;      
 		locations=locations+addss3;
 	}
+	location=location+addss2;
 	locations=locations+addss4;
 }
 }
@@ -5877,8 +5907,7 @@ steeps=xx2-xx1;
 addss=1;
 location=yy*img[0]+xx1+3;
 for(f=0;f<steeps;f++){
-img[x+location]=r<<16 | g << 8 | b;
-location=location+addss;
+img[f+location]=r<<16 | g << 8 | b;
 }
 }
 
