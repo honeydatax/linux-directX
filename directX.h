@@ -6586,4 +6586,26 @@ int *loadArrayMap(char *files){
 	}
 	return NULL;
 }
+int saveArrayMap(char *files,int *img){
+	char bmid[]="MapArray\0\0";	
+	struct arrayMaps AM;
+	int *bitm;
+	int *imgix=img;
+	int n=0;
+	int nn=0;
+	int nnn=0;
+	FILE *f1;
+	if(files!=NULL){
+		f1=fopen(files,"w");
+		if(f1!=NULL){
+				fseek(f1,0,SEEK_SET);
+				fwrite(bmid,9,1,f1);
+				fwrite(img,imgix[0]*imgix[1]*sizeof(int)+3*sizeof(int),1,f1);
+				fclose(f1);
+				return 1;
+		}
+	}
+	return 0;
+}
+
 
