@@ -72,21 +72,21 @@ mouseEvent();
 x=mouseX;
 y=mouseY;
 left=0;
+ddd();
 copyImage(x-6,y-6,oldIMAGE);
 while(1){
-	ddd();
 	mouseEvent();
 	if(mouseX!=x || mouseY!=y){
 		putImage(x-6,y-6,oldIMAGE);
 		x=mouseX;
 		y=mouseY;
+		ddd();
 		copyImage(x-6,y-6,oldIMAGE);		
 		ball(x,y,3,100,100,255);
 		left=0;
 	}
 	if(getc(stdin)==27)break;
 }
-
 
 endX(fbfd);
     return 0;
