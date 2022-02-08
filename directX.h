@@ -16,6 +16,11 @@
 
 #define FONTDATAMAX 2048
 #define PI 3.1415927
+struct arrayMaps{
+	int w;
+	int h;
+	int bits;
+};
 
 struct control{
 int x;
@@ -6547,29 +6552,38 @@ if (RGBC(tr,tg,tb)!=img[iy*img[0]+ix+3])ppixel16(x+ix,y+iy,img[iy*img[0]+ix+3]);
 
 
 }
+int *loadArrayMap(char *files){
+	char bmid[12];	
+	struct arrayMaps AM;
+	int *img;
+	int *bitm;
+	int n=0;
+	int nn=0;
+	int nnn=0;
+	FILE *f1;
+	if(files!=NULL){
+		f1=fopen(files,"r");
+		if(f1!=NULL){
+				fseek(f1,0,SEEK_SET);
+				fread(bmid,9,1,f1);
+				bmid[10]=0;
+				if(strcmp(bmid,"MapArray")!=0){
+					if(f1!=NULL)fclose(f1);
+					return NULL;
+				}
+				fread(&AM,sizeof(AM),1,f1);
+				if(AM.w>641 || AM.h>481 || AM.bits!=32){
+					if(f1!=NULL)fclose(f1);
+					return NULL;
+				}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+				img=creatImage(AM.w,AM.h);
+				bitm=img+3;
+				fread(bitm,AM.w*AM.h*sizeof(int),1,f1);
+				fclose(f1);
+				return img;
+		}
+	}
+	return NULL;
+}
 
