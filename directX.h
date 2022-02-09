@@ -5662,14 +5662,18 @@ if(x>x2 && y<y2)i=5;
 if(x>x2 && y>y2)i=4;
 if(x<x2 && y<y2)i=3;
 if(x<x2 && y>y2)i=2;
-if(y==y2)i=0;
-if(x==x2)i=1;
+if(y==y2 && x<x2)i=0;
+if(x==x2 && y<y2)i=1;
+if(y==y2 && x2<x)i=0;
+if(x==x2 && y2<y)i=1;
 if (i==0)hline(x,y,x2,r,g,b);
 if (i==1)vline(x,y,y2,r,g,b);
 if (i==2)lineL(x,y,x2,y2,r,g,b);
 if (i==3)lineR(x,y,x2,y2,r,g,b);
 if (i==4)lineR(x2,y2,x,y,r,g,b);
 if (i==5)lineL(x2,y2,x,y,r,g,b);
+if (i==7)hline(x2,y,x,r,g,b);
+if (i==6)vline(x,y2,y,r,g,b);
 }
 
 void rectangle(int x,int y,int x2,int y2,char r,char g,char b){
